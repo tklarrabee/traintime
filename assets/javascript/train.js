@@ -1,0 +1,86 @@
+// Initialize Firebase
+var config = {
+    apiKey: "AIzaSyCXX90mXLRTKgInXqMauiwZNzNwwCP-gKo",
+    authDomain: "trainymctrainfacesenior.firebaseapp.com",
+    databaseURL: "https://trainymctrainfacesenior.firebaseio.com",
+    projectId: "trainymctrainfacesenior",
+    storageBucket: "trainymctrainfacesenior.appspot.com",
+    messagingSenderId: "615288150859"
+};
+firebase.initializeApp(config);
+
+var database = firebase.database();
+$("#trainButt").on("click", function () {
+
+    var trainNameButt = $("#trainName").val().trim();
+    var destinationButt = $("#destination").val().trim();
+    var firstTrainButt = $("#firstTrain").val().trim();
+    var frequencyButt = $("#frequency").val().trim();
+
+    addTrain(frequencyButt, firstTrainButt, trainNameButt, destinationButt);
+
+
+
+
+    // var tFrequency = 10;
+    // var firstTrain = "01:00";
+    // var firstTime = moment(firstTrain, "HH:mm").subtract(1, "years")
+    // var currentTime = moment();
+    // var diffTime = moment().diff(moment(firstTime), "minutes");
+    // var tRemainder = diffTime % tFrequency;
+    // var tMinutesTillTrain = tFrequency - tRemainder;
+    // var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+
+    // var initialTrain = {
+    //     name: "Midnight Train",
+    //     destination: "Anywhere",
+    //     frequency: tFrequency,
+    //     nextArrival: JSON.stringify(nextTrain)
+    // }
+});
+
+function addTrain(freq, first, name, dest) {
+
+
+    var newTrain = {
+        name: name,
+        destination: dest,
+        frequency: freq,
+        firstTrain: JSON.stringify(first),
+    }
+
+    console.log(newTrain);
+
+    database.ref().push(newTrain);
+}
+
+database.ref().on("child_added", function (childSnapshot) {
+    console.log(childSnapshot.val());
+    // var tFrequency = freq;
+
+
+    var trainName = childSnapshot.val().name;
+    var destination = childSnapshot.val().destination;
+    var frequency = childSnapshot.val().frequency;
+    var firstTrain = childSnapshot.val().firstTrain;
+
+    var ogTrain = moment(firstTrain, "HH:mm").subtract(1, "years");
+    var diffTime = moment().diff(moment(ogTrain), "minutes");
+    var tRemainder = diffTime % frequency;
+    var tMinutesTillTrain = frequency - tRemainder;
+    var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    // var firstTrain = moment.unix(childSnapshot.val().firstTrain).format("MM/DD/YYYY");
+    // var minutesAway = childSnapshot.val().minutesAway;
+
+    //Create Row of Data
+
+    var rowUrBoat = $("<tr>").append(
+        $("<td>").text(trainName),
+        $("<td>").text(destination),
+        $("<td>").text(frequency),
+        $("<td>").text(nextTrain),
+        $("<td>").text(tMinutesTillTrain)
+    );
+
+    $("#trainBod").append(rowUrBoat);
+});
