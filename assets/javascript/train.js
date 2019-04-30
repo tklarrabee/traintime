@@ -9,6 +9,8 @@ var config = {
 };
 firebase.initializeApp(config);
 
+var dataSet = [];
+
 var database = firebase.database();
 $("#trainButt").on("click", function () {
 
@@ -19,24 +21,6 @@ $("#trainButt").on("click", function () {
 
     addTrain(frequencyButt, firstTrainButt, trainNameButt, destinationButt);
 
-
-
-
-    // var tFrequency = 10;
-    // var firstTrain = "01:00";
-    // var firstTime = moment(firstTrain, "HH:mm").subtract(1, "years")
-    // var currentTime = moment();
-    // var diffTime = moment().diff(moment(firstTime), "minutes");
-    // var tRemainder = diffTime % tFrequency;
-    // var tMinutesTillTrain = tFrequency - tRemainder;
-    // var nextTrain = moment().add(tMinutesTillTrain, "minutes");
-
-    // var initialTrain = {
-    //     name: "Midnight Train",
-    //     destination: "Anywhere",
-    //     frequency: tFrequency,
-    //     nextArrival: JSON.stringify(nextTrain)
-    // }
 });
 
 function addTrain(freq, first, name, dest) {
@@ -70,18 +54,45 @@ database.ref().on("child_added", function (childSnapshot) {
     var tMinutesTillTrain = frequency - tRemainder;
     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
     var prettyTime = moment(nextTrain).format("HH:mm");
-    // var firstTrain = moment.unix(childSnapshot.val().firstTrain).format("MM/DD/YYYY");
-    // var minutesAway = childSnapshot.val().minutesAway;
-
-    //Create Row of Data
 
     var rowUrBoat = $("<tr>").append(
         $("<td>").text(trainName),
         $("<td>").text(destination),
         $("<td>").text(frequency),
-        $("<td>").text(prettyTime),
-        $("<td>").text(tMinutesTillTrain)
+        $("<td class='next'>").text(prettyTime),
+        $("<td class='minutes'>").text(tMinutesTillTrain)
     );
 
+    rowUrBoat.attr("id", childSnapshot.key)
+
+    keyset.push(childSnapshot.key);
+    console.log(keyset);
     $("#trainBod").append(rowUrBoat);
 });
+
+// function trainNext(freq, first){
+//     var ogTrain = moment(first, "HH:mm").subtract(1, "years");
+//     var diffTime = moment().diff(moment(ogTrain), "minutes");
+//     var tRemainder = diffTime % freq;
+//     var tMinutesTillTrain = frequency - tRemainder;
+//     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+//     var prettyTime = moment(nextTrain).format("hh:mm a");
+//     return prettyTime;
+// }
+
+// function trainMinute(freq, first){
+//     var ogTrain = moment(first, "HH:mm").subtract(1, "years");
+//     var diffTime = moment().diff(moment(ogTrain), "minutes");
+//     var tRemainder = diffTime % freq;
+//     var tMinutesTillTrain = frequency - tRemainder;
+//     return tMinutesTillTrain;
+// }
+
+// function trainUpdate(){
+//     for(i = 0; i < keySet.length; i++){
+//         var fireKey = keySet[i]
+//         $("#"+fireKey+" > .next").text()
+//     }
+// }
+
+// setInterval(trainUpdate, 60000)
