@@ -69,6 +69,7 @@ database.ref().on("child_added", function (childSnapshot) {
     var tRemainder = diffTime % frequency;
     var tMinutesTillTrain = frequency - tRemainder;
     var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+    var prettyTime = moment(nextTrain).format("HH:mm");
     // var firstTrain = moment.unix(childSnapshot.val().firstTrain).format("MM/DD/YYYY");
     // var minutesAway = childSnapshot.val().minutesAway;
 
@@ -78,7 +79,7 @@ database.ref().on("child_added", function (childSnapshot) {
         $("<td>").text(trainName),
         $("<td>").text(destination),
         $("<td>").text(frequency),
-        $("<td>").text(nextTrain),
+        $("<td>").text(prettyTime),
         $("<td>").text(tMinutesTillTrain)
     );
 
