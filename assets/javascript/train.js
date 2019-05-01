@@ -9,7 +9,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
-var dataSet = [];
+var keySet = [];
 
 var database = firebase.database();
 $("#trainButt").on("click", function () {
@@ -65,8 +65,8 @@ database.ref().on("child_added", function (childSnapshot) {
 
     rowUrBoat.attr("id", childSnapshot.key)
 
-    keyset.push(childSnapshot.key);
-    console.log(keyset);
+    keySet.push(childSnapshot.key);
+    console.log(keySet);
     $("#trainBod").append(rowUrBoat);
 });
 
